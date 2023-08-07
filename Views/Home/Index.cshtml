@@ -1,0 +1,49 @@
+﻿@{
+        ViewBag.Title = "Home Page";
+}
+
+<header><h1 id="title" class=" mb-4">find a Printer</h1></header>
+<main>
+    <section class="row" aria-labelledby="aspnetTitle">
+
+  
+        <div class="col-md-4">
+            <button id="findPrinters" class="btn btn-secondary btn-md btn-block mb-4">Find Printers</button>
+
+            <div id="popup" style="display: none;">
+                <h2>Select a Printer:</h2>
+                <ul id="printerStatusList"></ul>
+            </div>
+        </div>
+
+       
+
+    </section>
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#findPrinters').click(function(e) {
+            e.preventDefault(); // prevent the form from being submitted
+            $.ajax({
+                url: '@Url.Action("GetPrinterStatusList", "PrinterLookup")',
+                type: 'POST',
+                success: function(data) {
+                    // populate the pop-up with the returned data
+                    var $list = $('#printerStatusList').empty(); // get the list and empty it
+                    for (var i = 0; i < data.length; i++) {
+                        $list.append('<li><input type="radio" name="printer" value="' + data[i].Name + '"> ' + data[i].Name + ': ' + data[i].Status + '</li>');
+                    }
+
+                    // display the pop-up
+                    $('#popup').show();
+                }
+            });
+        });
+
+        
+
+    });
+</script>
